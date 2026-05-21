@@ -1,4 +1,4 @@
-<img width="1284" height="796" alt="image" src="https://github.com/user-attachments/assets/1dd875b8-315f-4955-82c4-a0c6a9ed5c8a" /># Лабораторная работа №7
+# Лабораторная работа №7
 
 ## Анализ и преобразование кода с использованием Clang и LLVM
 
@@ -48,7 +48,8 @@ sudo apt install -y clang llvm llvm-dev llvm-runtime graphviz xdg-utils
 
 **Рисунок 1 — установка пакетов LLVM, Clang и Graphviz**
 
-<img width="886" height="776" alt="image" src="https://github.com/user-attachments/assets/b134d32d-4a91-4794-9ed9-79322f1a79ad" />
+<img width="710" height="537" alt="image" src="https://github.com/user-attachments/assets/59f39277-d095-4c16-b844-2bd64ef54eb5" />
+
 
 После установки были проверены версии основных инструментов. Проверка выполнялась командами `clang --version`, `opt --version`, `dot -V` и `llvm-config --version`.
 
@@ -61,7 +62,8 @@ llvm-config --version
 
 **Рисунок 2 — проверка версий Clang, opt, Graphviz и создание рабочей папки**
 
-<img width="856" height="579" alt="image" src="https://github.com/user-attachments/assets/4ec0cbe4-1c93-4970-b0b3-f4a193a35593" />
+<img width="496" height="256" alt="image" src="https://github.com/user-attachments/assets/d5814af2-c0b0-4c51-9c29-e53edf7b136c" />
+
 
 **Рисунок 3 — дополнительная проверка команды llvm-config --version**
 
@@ -104,7 +106,8 @@ grep -A45 "FunctionDecl.*main" ast_main.txt
 
 **Рисунок 4 — фрагмент AST для функций square и main**
 
-<img width="886" height="700" alt="image" src="https://github.com/user-attachments/assets/df1ae7af-e1f0-4541-9237-2ee99be319e4" />
+<img width="773" height="474" alt="image" src="https://github.com/user-attachments/assets/c6d173c9-be50-4c1a-9d03-c688765b57fe" />
+
 
 В AST функция `square` представлена узлом `FunctionDecl`. Параметр `x` отображается как `ParmVarDecl`, а операция `x * x` — как `BinaryOperator`. Функция `main` также представлена как `FunctionDecl`, внутри которого видны объявления переменных, вызов `square` и вызов `printf`.
 
@@ -128,11 +131,13 @@ grep -n "define\|alloca\|load\|store\|call\|printf" main_02.ll
 
 **Рисунок 5 — LLVM IR без оптимизации для main.c**
 
-<img width="886" height="813" alt="image" src="https://github.com/user-attachments/assets/2887ebc4-e18c-48da-bfd8-ac5bf7e6e240" />
+<img width="780" height="528" alt="image" src="https://github.com/user-attachments/assets/dfd96c84-d28b-45c8-b544-38ace65ee275" />
+
 
 **Рисунок 6 — сравнение ключевых инструкций в IR без оптимизации и после -O2**
 
-<img width="886" height="778" alt="image" src="https://github.com/user-attachments/assets/2909afc1-1443-4a58-ba09-e0ee3d09d055" />
+<img width="779" height="473" alt="image" src="https://github.com/user-attachments/assets/d73d9d9c-56af-4bcb-bde6-fc8405d209cc" />
+
 
 В IR без оптимизации присутствуют инструкции `alloca`, `store` и `load`. Это значит, что локальные переменные размещаются в памяти, а значения явно записываются и считываются. Также видно, что функция `square` вызывается отдельно.
 
@@ -170,7 +175,8 @@ dot -Tpng .square.dot -o cfg_square_00.png
 
 **Рисунок 8 — CFG функций main и square без оптимизации**
 
-<img width="886" height="783" alt="image" src="https://github.com/user-attachments/assets/1d63972b-2c4f-41e1-a7a3-745b8b813a31" />
+<img width="783" height="491" alt="image" src="https://github.com/user-attachments/assets/e91d5bfc-1437-4c64-9b26-dda23f62e07c" />
+
 
 После оптимизации `-O2` CFG был построен аналогичным способом.
 
@@ -186,11 +192,13 @@ dot -Tpng .square.dot -o cfg_square_02.png
 
 **Рисунок 10 — CFG функции main после оптимизации -O2**
 
-<img width="827" height="754" alt="image" src="https://github.com/user-attachments/assets/91ecf4b8-7b02-4ebb-94ab-3346f2a388a2" />
+<img width="780" height="478" alt="image" src="https://github.com/user-attachments/assets/8c1225b8-a81e-4eda-b2d8-fcb93f3def6c" />
+
 
 **Рисунок 11 — CFG функции square после оптимизации -O2**
 
-<img width="768" height="593" alt="image" src="https://github.com/user-attachments/assets/4435093b-b387-4d5c-968e-df80bf1605ed" />
+<img width="723" height="505" alt="image" src="https://github.com/user-attachments/assets/cda53365-25b9-4856-b69c-76b64cf580a0" />
+
 
 Так как программа не содержит условных операторов и циклов, CFG для каждой функции состоит из одного базового блока. После оптимизации меняется содержимое блока, но структура управления остается линейной.
 
