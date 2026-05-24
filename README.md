@@ -48,7 +48,7 @@ sudo apt install -y clang llvm llvm-dev llvm-runtime graphviz xdg-utils
 
 **Рисунок 1 — установка пакетов LLVM, Clang и Graphviz**
 
-<img width="710" height="537" alt="image" src="https://github.com/user-attachments/assets/59f39277-d095-4c16-b844-2bd64ef54eb5" />
+<img width="1165" height="556" alt="image" src="https://github.com/user-attachments/assets/dc77bcde-e9fc-4b64-89d9-8d1e3f1f7942" />
 
 
 После установки были проверены версии основных инструментов. Проверка выполнялась командами `clang --version`, `opt --version`, `dot -V` и `llvm-config --version`.
@@ -60,14 +60,15 @@ dot -V
 llvm-config --version
 ```
 
-**Рисунок 2 — проверка версий Clang, opt, Graphviz и создание рабочей папки**
+**Рисунок 2 — проверка версий Clang, opt**
 
-<img width="496" height="256" alt="image" src="https://github.com/user-attachments/assets/d5814af2-c0b0-4c51-9c29-e53edf7b136c" />
+<img width="697" height="217" alt="image" src="https://github.com/user-attachments/assets/de704096-71db-4620-b835-a1fefe502c0c" />
 
 
-**Рисунок 3 — дополнительная проверка команды llvm-config --version**
 
-<img width="591" height="62" alt="image" src="https://github.com/user-attachments/assets/89dcd118-95d3-4d1b-9740-d4d7709c9386" />
+**Рисунок 3 — проверка версий dot, llvm-config**
+
+<img width="625" height="90" alt="image" src="https://github.com/user-attachments/assets/7844c142-0a30-420e-a85b-a7d1c89d21af" />
 
 ---
 
@@ -106,7 +107,7 @@ grep -A45 "FunctionDecl.*main" ast_main.txt
 
 **Рисунок 4 — фрагмент AST для функций square и main**
 
-<img width="773" height="474" alt="image" src="https://github.com/user-attachments/assets/c6d173c9-be50-4c1a-9d03-c688765b57fe" />
+<img width="1279" height="797" alt="image" src="https://github.com/user-attachments/assets/bac039c2-7365-4ac0-a69d-0d3c439438d5" />
 
 
 В AST функция `square` представлена узлом `FunctionDecl`. Параметр `x` отображается как `ParmVarDecl`, а операция `x * x` — как `BinaryOperator`. Функция `main` также представлена как `FunctionDecl`, внутри которого видны объявления переменных, вызов `square` и вызов `printf`.
@@ -129,14 +130,9 @@ grep -n "define\|alloca\|load\|store\|call" main_00.ll
 grep -n "define\|alloca\|load\|store\|call\|printf" main_02.ll
 ```
 
-**Рисунок 5 — LLVM IR без оптимизации для main.c**
+**Рисунок 5 — сравнение ключевых инструкций в IR без оптимизации и после -O2**
 
-<img width="780" height="528" alt="image" src="https://github.com/user-attachments/assets/dfd96c84-d28b-45c8-b544-38ace65ee275" />
-
-
-**Рисунок 6 — сравнение ключевых инструкций в IR без оптимизации и после -O2**
-
-<img width="779" height="473" alt="image" src="https://github.com/user-attachments/assets/d73d9d9c-56af-4bcb-bde6-fc8405d209cc" />
+<img width="1157" height="707" alt="image" src="https://github.com/user-attachments/assets/4caaa616-2b37-4dcc-928e-1b087150bb68" />
 
 
 В IR без оптимизации присутствуют инструкции `alloca`, `store` и `load`. Это значит, что локальные переменные размещаются в памяти, а значения явно записываются и считываются. Также видно, что функция `square` вызывается отдельно.
@@ -169,13 +165,16 @@ dot -Tpng .main.dot -o cfg_main_00.png
 dot -Tpng .square.dot -o cfg_square_00.png
 ```
 
-**Рисунок 7 — создание dot-файлов и png-файлов CFG для main.c без оптимизации**
+**Рисунок 6 — создание dot-файлов и png-файлов CFG для main.c без оптимизации**
 
-<img width="886" height="474" alt="image" src="https://github.com/user-attachments/assets/69390a72-a327-4c5c-a0d9-bfeaec609e07" />
+<img width="840" height="111" alt="image" src="https://github.com/user-attachments/assets/590c9b04-a1c5-4919-92d0-32822286cb24" />
 
-**Рисунок 8 — CFG функций main и square без оптимизации**
 
-<img width="783" height="491" alt="image" src="https://github.com/user-attachments/assets/e91d5bfc-1437-4c64-9b26-dda23f62e07c" />
+
+**Рисунок 7 — CFG функций main и square без оптимизации**
+
+<img width="1277" height="541" alt="image" src="https://github.com/user-attachments/assets/3733c04e-5059-4b33-8adc-c9ac4ee95e0b" />
+
 
 
 После оптимизации `-O2` CFG был построен аналогичным способом.
@@ -186,18 +185,14 @@ dot -Tpng .main.dot -o cfg_main_02.png
 dot -Tpng .square.dot -o cfg_square_02.png
 ```
 
-**Рисунок 9 — создание CFG для main.c после оптимизации -O2**
+**Рисунок 8 — создание CFG для main.c после оптимизации -O2**
 
-<img width="886" height="497" alt="image" src="https://github.com/user-attachments/assets/dc5e9072-f248-4e54-b18f-ae4e225d28ec" />
-
-**Рисунок 10 — CFG функции main после оптимизации -O2**
-
-<img width="780" height="478" alt="image" src="https://github.com/user-attachments/assets/8c1225b8-a81e-4eda-b2d8-fcb93f3def6c" />
+<img width="873" height="112" alt="image" src="https://github.com/user-attachments/assets/5088f33b-60b0-4a14-b9c8-68a2d399d593" />
 
 
-**Рисунок 11 — CFG функции square после оптимизации -O2**
+**Рисунок 9 — CFG функции main и square после оптимизации -O2**
 
-<img width="723" height="505" alt="image" src="https://github.com/user-attachments/assets/cda53365-25b9-4856-b69c-76b64cf580a0" />
+<img width="1281" height="540" alt="image" src="https://github.com/user-attachments/assets/0f433563-9330-443f-871e-74a26485d14e" />
 
 
 Так как программа не содержит условных операторов и циклов, CFG для каждой функции состоит из одного базового блока. После оптимизации меняется содержимое блока, но структура управления остается линейной.
